@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список дел</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #eeeeee;
+            color: #222222;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            color: #1e63d6;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 25px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 12px 0;
+            padding: 12px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .task-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .date {
+            font-size: 13px;
+            color: gray;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            background-color: #1e63d6;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background-color: #174da6;
+        }
+
+        a {
+            color: white;
+            background-color: #d63333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        a:hover {
+            background-color: #a82121;
+        }
+
+        .clear-link {
+            display: inline-block;
+            margin-top: 15px;
+            background-color: #555555;
+        }
+
+        .clear-link:hover {
+            background-color: #333333;
+        }
+
+        .empty {
+            color: gray;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Мои задачи</h1>
+
+        {% if tasks %}
+            <ul>
+                {% for task in tasks %}
+                    <li>
+                        <div class="task-info">
+                            <strong>{{ task.text }}</strong>
+                            <span class="date">Дата создания: {{ task.created_at }}</span>
+                        </div>
+
+                        <a href="/delete/{{ loop.index0 }}">Удалить</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <a class="clear-link" href="/clear">Очистить всё</a>
+        {% else %}
+            <p class="empty">Список задач пуст. Добавьте первую задачу.</p>
+        {% endif %}
+
+        <h2>Добавить задачу</h2>
+
+        <form method="POST" action="/add">
+            <input type="text" name="task" placeholder="Новая задача" required>
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+</body>
+</html>
