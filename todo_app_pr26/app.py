@@ -39,6 +39,7 @@ def add_task():
             "text": task_text,
             "created_at": datetime.now().strftime("%d.%m.%Y %H:%M")
         }
+
         tasks.append(task)
         save_tasks(tasks)
 
@@ -58,8 +59,50 @@ def delete_task(task_id):
 def clear_tasks():
     tasks.clear()
     save_tasks(tasks)
+
     return redirect("/")
 
 
+@app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
+def edit_task(task_id):
+
+    if task_id < 0 or task_id >= len(tasks):
+        return "Задача не найдена", 404
+
+    task = tasks[task_id]
+
+    if request.method == 'POST':
+
+        new_text = request.form.get('task', '').strip()
+
+        # Проверка на пустое поле
+        if new_text == '':
+            return render_template(
+                'edit.html',
+                task=task,
+                message="Текст не может быть пустым!"
+            )
+
+        # Старый текст задачи
+        old_text = task['text']
+
+        # Проверка: текст не изменился
+        if new_text == old_text:
+            return render_template(
+                'edit.html',
+                task=task,
+                message="Ничего не изменено"
+            )
+
+        # Изменение текста задачи
+        tasks[task_id]['text'] = new_text
+
+        save_tasks(tasks)
+
+        return redirect('/')
+
+    return render_template('edit.html', task=task)
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) 
